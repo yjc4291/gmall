@@ -1,0 +1,67 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: pms-route # 商品管理路由
+          uri: lb://pms-service
+          predicates:
+            - Path=/pms/**
+        - id: oms-route # 订单管理路由
+          uri: lb://oms-service
+          predicates:
+            - Path=/oms/**
+        - id: ums-route # 用户管理路由
+          uri: lb://ums-service
+          predicates:
+            - Path=/ums/**
+        - id: wms-route # 仓库管理路由
+          uri: lb://wms-service
+          predicates:
+            - Path=/wms/**
+        - id: sms-route # 营销管理路由
+          uri: lb://sms-service
+          predicates:
+            - Path=/sms/**
+        - id: search-route
+          uri: lb://search-service
+          predicates:
+            - Host=search.gmall.com
+        - id: index-route1
+          uri: lb://index-service
+          predicates:
+            - Host=www.gmall.com,gmall.com
+          filters:
+            - Auth=/xxx,/yyy
+        - id: index-route2
+          uri: lb://index-service
+          predicates:
+            - Path=/index/**
+        - id: item-route
+          uri: lb://item-service
+          predicates:
+            - Host=item.gmall.com
+        - id: auth-route  # 单点登录路由
+          uri: lb://auth-service
+          predicates:
+            - Host=sso.gmall.com,auth.gmall.com
+          filters:
+            - AddResponseHeader=AAA, BBB
+        - id: cart-route
+          uri: lb://cart-service
+          predicates:
+            - Host=cart.gmall.com
+        - id: order-route
+          uri: lb://order-service
+          predicates:
+            - Host=order.gmall.com
+          filters:
+            - Auth=/
+
+jwt:
+  pubKeyPath: D:\workspace\idea_workspace\gmall\rsa\rsa.pub
+  cookieName: GMALL_TOKEN
